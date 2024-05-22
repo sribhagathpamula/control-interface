@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Interface</title>
+    <style>
+        body {
+            background-image: url(https://www.thejo-engg.com/assets/img/thejo_loader.gif);
+            font-family: Arial, sans-serif;
+            background-color: #eaeaea; /*  background color */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            justify-content: center;
+            
+        }
+
+        .screen {
+            background-color:grey;
+            color: black;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+            justify-content: center;
+        }
+
+        .screen h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            justify-content: center;
+
+        }
+
+        .parameters {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0;
+        }
+
+        input {
+            margin-left: 10px;
+        }
+
+        .back-button, .heater-plate-button, .pair-button, .menu-button, .next-button, .login-button {
+            background-color:goldenrod;
+            border: none;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .heater-plate-button {
+            margin-top: 20px;
+        }
+
+        .pair-button {
+            margin: 10px 0;
+            display: block;
+            width: 100%;
+        }
+
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .login-screen input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 80%;
+        }
+
+        .login-button {
+            margin-top: 20px;
+        }
+
+        .graph {
+            background-color: #000;
+            padding: 20px;
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        .graph h1 {
+            color: #fff;
+        }
+
+        .graph canvas {
+            background-color: blue;
+            border-radius: 8px;
+        }
+
+        .graph .menu-button, .graph .next-button {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="screen login-screen" id="login-screen">
+            <h1><i>User Login</i></h1>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button class="login-button" id="login-button">Login</button>
+        </div>
+        <div class="screen" id="setting-2">
+            <button class="back-button" onclick="showScreen('login-screen')">BACK</button>
+            <h1>SETTING-2</h1>
+            <div class="parameters">
+                <div class="column">
+                    <label>TEMPERATURE-1 <input type="number" value="0">°C</label>
+                    <label>TEMPERATURE-2 <input type="number" value="0">°C</label>
+                    <label>TEMPERATURE-3 <input type="number" value="0">°C</label>
+                    <label>TEMPERATURE TOLERANCE (±) <input type="number" value="0">°C</label>
+                </div>
+                <div class="column">
+                    <label>PRESSURE-1 <input type="number" value="0">bar</label>
+                    <label>PRESSURE-2 <input type="number" value="0">bar</label>
+                    <label>PRESSURE-3 <input type="number" value="0">bar</label>
+                    <label>PRESSURE TOLERANCE (±) <input type="number" value="0">bar</label>
+                </div>
+                <div class="column">
+                    <label>CURING TIME <input type="number" value="0"> MIN</label>
+                    <button class="heater-plate-button" onclick="showScreen('heater-plates-selection')">HEATER PLATE SELECTION</button>
+                </div>
+            </div>
+        </div>
+        <div class="screen" id="heater-plates-selection">
+            <button class="back-button" onclick="showScreen('setting-2')">BACK</button>
+            <h1>HEATER PLATES SELECTION</h1>
+            <div class="buttons">
+                <button class="pair-button" onclick="showScreen('graph-1')">PAIR-1</button>
+                <button class="pair-button" onclick="showScreen('graph-1')">PAIR-2</button>
+                <button class="pair-button" onclick="showScreen('graph-1')">PAIR-3</button>
+                <button class="pair-button" onclick="showScreen('graph-1')">PAIR-4</button>
+            </div>
+        </div>
+        <div class="screen graph" id="graph-1">
+            <div class="header">
+                <button class="menu-button" onclick="showScreen('setting-2')">MENU</button>
+                <h1>GRAPH-1</h1>
+                <button class="next-button">NEXT</button>
+            </div>
+            <div class="graph-area">
+                <canvas id="myChart" width="800" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const users = [
+            { username: 'user1', password: 'password1' },
+            { username: 'user2', password: 'password2' }
+        ];
+
+        document.getElementById('login-button').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                showScreen('setting-2');
+            } else {
+                alert('Invalid credentials');
+            }
+        });
+
+        function showScreen(screenId) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => {
+                screen.style.display = 'none';
+            });
+
+            document.getElementById(screenId).style.display = 'block';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            showScreen('login-screen');
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 20}, (_, i) => i * 10),
+                    datasets: [{
+                        label: 'Temperature',
+                        data: [20, 100, 60, 140, 80, 160, 100, 180, 60, 120, 90, 140, 100, 160, 120, 180, 80, 140, 60, 100],
+                        borderColor: 'red',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'TIME (MIN)',
+                                color: '#fff'
+                            },
+                            ticks: {
+                                color: '#fff'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'TEMPERATURE (°C)',
+                                color: '#fff'
+                            },
+                            ticks: {
+                                color: '#fff'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
